@@ -19,26 +19,32 @@ public class UpdateAction implements Action {
 		/* 접근 제어 해야 함 */
 		//	 Access Control
 		HttpSession session = request.getSession();
+		if (request.getParameter("name") == null || request.getParameter("email") == null
+				|| request.getParameter("password") == null) {
+			MvcUtil.redirect(request.getContextPath() + "/user?a=loginform ", request, response);
+			return;
+		}else {
+			Long no =  Long.parseLong(request.getParameter("no"));
+			String name = request.getParameter("name");
+			String email = request.getParameter("email");
+			String password = request.getParameter("password");
+			String gender = request.getParameter("gender");
+			
+			UserVo vo = new UserVo();
+			vo.setName(name);
+			vo.setEmail(email);
+			vo.setPassword(password);
+			vo.setGender(gender);
+			vo.setNo(no);
+			
+			new UserDao().updateByNo(vo);
+			session.removeAttribute("authUser");
+			
+			UserVo authUser = new UserDao().findByEmailAndPassword(email, password);
+			session.setAttribute("authUser", authUser);
+			MvcUtil.redirect(request.getContextPath() + "/user?a=updatesuccess", request, response);
+		}
 		
-		Long no =  Long.parseLong(request.getParameter("no"));
-		String name = request.getParameter("name");
-		String email = request.getParameter("email");
-		String password = request.getParameter("password");
-		String gender = request.getParameter("gender");
-		
-		UserVo vo = new UserVo();
-		vo.setName(name);
-		vo.setEmail(email);
-		vo.setPassword(password);
-		vo.setGender(gender);
-		vo.setNo(no);
-		
-		new UserDao().updateByNo(vo);
-		session.removeAttribute("authUser");
-		
-		UserVo authUser = new UserDao().findByEmailAndPassword(email, password);
-		session.setAttribute("authUser", authUser);
-		MvcUtil.redirect(request.getContextPath() + "/user?a=updatesuccess", request, response);
 	}
 
 }

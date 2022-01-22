@@ -17,10 +17,14 @@ public class writeAction implements Action {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String content = request.getParameter("content");
-		String title = request.getParameter("title");
 		HttpSession session = request.getSession();
 		UserVo authUser = (UserVo)session.getAttribute("authUser");
+		if(authUser == null) {
+			MvcUtil.redirect(request.getContextPath() + "/user?a=loginform ", request, response);
+			return; 
+		}
+		String content = request.getParameter("content");
+		String title = request.getParameter("title");
 		
 		BoardVo vo = new BoardVo();
 		vo.setContents(content);

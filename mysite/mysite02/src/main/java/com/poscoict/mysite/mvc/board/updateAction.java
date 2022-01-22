@@ -17,6 +17,12 @@ public class updateAction implements Action {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		UserVo authUser = (UserVo)session.getAttribute("authUser");
+		if(authUser == null) {
+			MvcUtil.redirect(request.getContextPath() + "/user?a=loginform ", request, response);
+			return; 
+		}
 		String title = request.getParameter("title");
 		String content = request.getParameter("content");
 		Long no = Long.parseLong(request.getParameter("no"));
