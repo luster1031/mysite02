@@ -14,6 +14,7 @@ import com.poscoict.web.util.MvcUtil;
 public class DeleteAction implements Action {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
 		String no = request.getParameter("no");
 		String password = request.getParameter("password");
 		

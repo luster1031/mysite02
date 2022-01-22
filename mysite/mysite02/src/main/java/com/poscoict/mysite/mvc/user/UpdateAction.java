@@ -19,9 +19,9 @@ public class UpdateAction implements Action {
 		/* 접근 제어 해야 함 */
 		//	 Access Control
 		HttpSession session = request.getSession();
-		if (request.getParameter("name") == null || request.getParameter("email") == null
-				|| request.getParameter("password") == null) {
-			MvcUtil.redirect(request.getContextPath() + "/user?a=loginform ", request, response);
+		if (request.getParameter("name").equals("") || request.getParameter("email").equals("")
+				|| request.getParameter("password").equals("")) {
+			MvcUtil.redirect(request.getContextPath() + "/user?a=updateform ", request, response);
 			return;
 		}else {
 			Long no =  Long.parseLong(request.getParameter("no"));
