@@ -12,7 +12,7 @@ import com.poscoict.mysite.vo.BoardVo;
 
 public class BoardDao {
 
-	public List<BoardVo> findAll(String limit, String input) {
+	public List<BoardVo> findAll(String limit, String input, String input2) {
 		List<BoardVo> list = new ArrayList<>();
 
 		Connection conn = null;
@@ -23,7 +23,7 @@ public class BoardDao {
 
 			String sql = "select b.no, b.title, b.hit,  b.contents, a.name, date_format(reg_date, '%Y/%m/%d %H:%i:%s'),"
 					+ " b.user_no, b.depth" + " from user a, board b" 
-					+ " where a.no = b.user_no and reg_date != '0000-00-00 00:00:00'"
+					+ " where a.no = b.user_no" + input2
 					+ "  and b.title like '%" + input + "%'" + " order by b.g_no desc,  b.o_no asc, b.depth asc"
 					+ limit;
 

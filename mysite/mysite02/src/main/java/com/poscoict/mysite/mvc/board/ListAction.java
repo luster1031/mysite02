@@ -36,10 +36,12 @@ public class ListAction implements Action {
 
 		// 키워드 검색 여부
 		String input;
+		String input2;	//	키워드 검색시 '삭제되었습니다.'안 보이게
 		String limit = "";
 		List<BoardVo> list = null;
 		if (request.getParameter("kwd") == null && request.getParameter("kwd2")==null) {	//	키워드 검색 아니 경우
 			input = "";
+			input2 = "";
 			count = new BoardDao().CountList();
 			m.put("serach", 0);
 		} else {	//	키워드 검색인 경우
@@ -52,8 +54,8 @@ public class ListAction implements Action {
 				input = request.getParameter("kwd2");
 				System.out.println("키워드ㅌ");
 			}
-			
-			list = new BoardDao().findAll("", "\\"+"\\" + input);
+			input2 = " and reg_date != '0000-00-00 00:00:00'";
+			list = new BoardDao().findAll("", "\\"+"\\" + input,input2);
 			count = list.size();
 			m.put("serach", 1);
 		}
@@ -72,7 +74,7 @@ public class ListAction implements Action {
 			}
 			limit = " LIMIT "+  (currentPage - 1)*listCount + " , " + endcount;
 		}
-		list = new BoardDao().findAll(limit, input);
+		list = new BoardDao().findAll(limit, input, input2);
 		
 		if (totalPage <= pageCount) {
 			endPage = totalPage;
