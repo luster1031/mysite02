@@ -23,13 +23,12 @@ public class BoardDao {
 
 			String sql = "select b.no, b.title, b.hit,  b.contents, a.name, date_format(reg_date, '%Y/%m/%d %H:%i:%s'),"
 					+ " b.user_no, b.depth" + " from user a, board b" 
-					+ " where a.no = b.user_no"
-					+ "  and b.title like '%" +input+ "%'"
-					+ " order by b.g_no desc,  b.o_no asc, b.depth asc" 
+					+ " where a.no = b.user_no and reg_date != '0000-00-00 00:00:00'"
+					+ "  and b.title like '%" + input + "%'" + " order by b.g_no desc,  b.o_no asc, b.depth asc"
 					+ limit;
-			
+
 			pstmt = conn.prepareStatement(sql);
-			System.out.println(sql);	
+			System.out.println(sql);
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
@@ -553,4 +552,36 @@ public class BoardDao {
 
 		return 1;
 	}
+
+	public boolean deletePost(BoardVo vo) {
+		boolean result = false;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			conn = getConnection();
+			String sql = " update board set " + "title = '삭제된 글입니다.', reg_date = '0000-00-00 00:00:00'" 
+			+ "where no = ?";
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setLong(1, vo.getNo());
+			int count = pstmt.executeUpdate();
+			result = count == 1;
+		} catch (SQLException e) {
+			System.out.println("error:" + e);
+		} finally {
+			try {
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return result;
+	}
+
 }

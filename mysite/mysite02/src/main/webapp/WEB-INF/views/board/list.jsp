@@ -19,8 +19,8 @@
 		<div id="content">
 			<div id="board">
 				<form id="search_form" action="" method="post">
-					<input type="text" id="kwd" name="kwd" value="${kwd }">
-					<input type="submit" value="찾기">
+					<input type="text" id="kwd" name="kwd" value="${kwd }"> <input
+						type="submit" value="찾기">
 				</form>
 				<table class="tbl-ex">
 					<tr>
@@ -44,26 +44,38 @@
 											src="${pageContext.servletContext.contextPath }/assets/images/reply.png"
 											height="100%">
 									</c:when>
-								</c:choose> <a
-								href="${pageContext.servletContext.contextPath }/board?a=view&no=${vo.no}">${vo.title }</a>
+								</c:choose> <c:choose>
+									<c:when test="${vo.title ne '삭제된 글입니다.' }">
+										<a
+											href="${pageContext.servletContext.contextPath }/board?a=view&no=${vo.no}">
+											${vo.title }</a>
+									</c:when>
+									<c:otherwise>
+									${vo.title }
+									</c:otherwise>
+								</c:choose>
 							</td>
-							<td>${vo.userName }</td>
-							<td>${vo.hit}</td>
-							<td>${vo.regDate }</td>
-							<!-- 글 쓴 사람이 아니면 삭제 못 하게 -->
 							<c:choose>
-								<c:when test="${authUser.no eq vo.userNo}">
-									<td><a
-										href="${pageContext.servletContext.contextPath }/board?a=delete&no=${vo.no}"
-										class="del"
-										style='background-image: url("${pageContext.servletContext.contextPath }/assets/images/recycle.png")'>삭제</a></td>
+								<c:when test="${vo.title ne '삭제된 글입니다.' }">
+									<td>${vo.userName }</td>
+									<td>${vo.hit}</td>
+									<td>${vo.regDate }</td>
+									<!-- 글 쓴 사람이 아니면 삭제 못 하게 -->
+									<c:choose>
+										<c:when
+											test="${(authUser.no eq vo.userNo)  and (vo.title ne '삭제된 글입니다.')}">
+											<td><a
+												href="${pageContext.servletContext.contextPath }/board?a=deletepost&no=${vo.no}"
+												class="del"
+												style='background-image: url("${pageContext.servletContext.contextPath }/assets/images/recycle.png")'>삭제</a></td>
+										</c:when>
+										<c:otherwise>
+											<c:set var="href"
+												value="${pageContext.servletContext.contextPath }/board" />
+										</c:otherwise>
+									</c:choose>
 								</c:when>
-								<c:otherwise>
-									<c:set var="href"
-										value="${pageContext.servletContext.contextPath }/board" />
-								</c:otherwise>
 							</c:choose>
-
 						</tr>
 					</c:forEach>
 				</table>
@@ -71,9 +83,17 @@
 				<div class="pager">
 					<ul>
 						<c:choose>
+							<c:when test="${m.serach == 1}">
+								<c:set var="search" value="&kwd2=${kwd }" />
+							</c:when>
+							<c:otherwise>
+								<c:set var="search" value="" />
+							</c:otherwise>
+						</c:choose>
+						<c:choose>
 							<c:when test="${m.prePage > 1}">
 								<li><a
-									href="${pageContext.servletContext.contextPath }/board?page=${m.prePage }">◀</a></li>
+									href="${pageContext.servletContext.contextPath }/board?page=${m.prePage }${search}">◀</a></li>
 							</c:when>
 						</c:choose>
 						<c:forEach var="num" begin="${m.startPage }" end="${m.endPage }">
@@ -85,23 +105,15 @@
 									<c:set var="select" value=''></c:set>
 								</c:otherwise>
 							</c:choose>
-							
-							
-							<c:choose>
-								<c:when test="${m.serach == 1}">
-									<c:set var="search" value="&kwd2=${kwd }" />
-								</c:when>
-								<c:otherwise>
-									<c:set var="search" value="" />
-								</c:otherwise>
-							</c:choose>
+
+
 							<li ${select }><a
 								href="${pageContext.servletContext.contextPath }/board?page=${num }${search}">${num }</a></li>
 						</c:forEach>
 						<c:choose>
 							<c:when test="${m.totalPage != m.endPage}">
 								<li><a
-									href="${pageContext.servletContext.contextPath }/board?page=${m.nextPage }">▶</a></li>
+									href="${pageContext.servletContext.contextPath }/board?page=${m.nextPage }${search}">▶</a></li>
 							</c:when>
 						</c:choose>
 					</ul>
