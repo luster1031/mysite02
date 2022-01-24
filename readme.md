@@ -33,7 +33,7 @@
 5. 게시물 수정
 
 + 자신이 작성한 글이라면 수정 가능
-	![수정](https://user-images.githubusercontent.com/61460836/150641085-016e5c85-ffae-479a-b242-b31193bf21fe.gif)
+	![수정](https://user-images.githubusercontent.com/61460836/150802739-6891ec24-7f85-4e72-b9c8-3d27e1a93350.gif)
 
 <br>
 6. 조회수
